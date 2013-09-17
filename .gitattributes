@@ -1,0 +1,18 @@
+# By default, let git use its autodetection to convert CRLF on windows
+*        text=auto
+
+# These files we know are text, so git does not need to guess
+*.html   text diff=html
+*.css    text
+*.js     text
+*.md     text
+
+# These files are binary, so don't let git's autodetection mess up
+*.png    binary
+*.jpeg   binary
+*.jpg    binary
+*.gif    binary
+
+# We probably don't have any visual studio stuff, but who knows...
+*.csproj text merge=union
+*.sln    text merge=union eol=crlf
