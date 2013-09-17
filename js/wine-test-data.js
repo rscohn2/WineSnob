@@ -1,5 +1,6 @@
-var wineData = [
+var wineTestData = [
     {
+        id: '0',
         name: 'winea',
         varietal: 'varietya',
         appelation: 'appelationa',
@@ -11,6 +12,7 @@ var wineData = [
         photo: null
     },
     {
+        id: '1',
         name: 'wineb',
         varietal: 'varietyb',
         appelation: 'appelationb',
@@ -22,6 +24,7 @@ var wineData = [
         photo: null
     },
     {
+        id: '2',
         name: 'winec',
         varietal: 'varietyc',
         appelation: 'appelationc',

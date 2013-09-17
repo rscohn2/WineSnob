@@ -40,6 +40,7 @@
         </script>
         <link href="css/icons.css" rel="stylesheet" type="text/css"></link>
         <link href="css/af.ui.css" rel="stylesheet" type="text/css"></link>
+        <link href="css/style.css" rel="stylesheet" type="text/css"></link>
     </head>
     <body>
         <div id="afui" class='ios'>
@@ -50,44 +51,16 @@
 	          
 	<div class="panel" title="Main" id="pageMain" selected="selected" data-appbuilder-object="page" style="" data-header="header_0">
 		<div class="input_element form_element" style="width: 100%; overflow: hidden;" data-appbuilder-object="input" data-position="static">
-			<label for="searchBox">Search</label>
-			<input type="text" style="float:left;" id="searchBox" placeholder="Name, varietal, etc.">
+			<label for="pageMainSearchBox">Search</label>
+			<input type="text" style="float:left;" id="pageMainSearchBox" placeholder="Name, varietal, etc.">
 		</div>
-		<ul class="list" data-appbuilder-object="list" data-position="static">
-			<li>
-				<a href="#pageDetails">Item 1</a>
-			</li>
-			<li>
-				<a href="#pageDetails">Item 2</a>
-			</li>
-		</ul>
+		<ul id="pageMainWineList" style="display:none" class="list" data-appbuilder-object="list" data-position="static"></ul>
+        <div id="pageMainSplash">
+            <p>You have <span id="pageMainWineCount">0</span> wines rated!</p>
+            <image src="images/splash.png" id="pageMainSplashImage"></image>
+        </div>
 	</div>
 	<div class="panel" title="Wine Details" id="pageDetails" data-appbuilder-object="page" style="" data-header="header_2">
-		<div class="text_item" data-appbuilder-object="text" data-position="static" style="text-align: center;">
-			<span id="">x</span> / <span id="">x</span>
-		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			Your Rating
-		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			(stars)
-		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			$0.00
-		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			Average Rating
-		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			(stars)
-		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			$0.00
-		</div>
-		<div class="textarea_element form_element" style="width: 100%; overflow: hidden;" data-appbuilder-object="textarea" data-position="static">
-			<label for="">Notes</label><textarea id=""></textarea>
-		</div>
-		<img src="images/blank.gif" style="width: 50px; height: 50px;" alt="Title" data-appbuilder-object="image" data-position="static" class="" title="">
 	</div>
 	<div class="panel" title="Enter Wine" id="pageEnter" data-appbuilder-object="page" style="" data-header="header_1">
 		<div class="input_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="input" data-position="static">
@@ -134,11 +107,53 @@
 	<a id="cancelButton" href="#pageMain" class="button" style="float:left;">Cancel</a><a id="saveButton" href="#pageMain" class="button" style="float:right;">Save</a>
 </header>
 <header id="header_2" data-appbuilder-object="header">
-	<h1 class="">
+	<h1 id="pageDetailsHeaderName" class="">
 		Wine Name
 	</h1>
 	<a id="editButton" href="#pageEnter" class="button" style="float:left;">Edit</a>
 </header>
         </div>
+        
+    <script src="js/fuse.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/wine-test-data.js"></script>
+    <script src="js/winesnob.js"></script>
     </body>
+
+    <script type="text/template" id="pageMainSearchItem">
+        {{#results}}
+        <li>
+        <a href="#pageDetails" onclick="pageMainItemClicked('{{id}}')">{{name}}</a>
+        </li>
+        {{/results}}
+    </script>
+
+    <script type="text/template" id="pageDetailsTemplate">
+		<div class="text_item" style="text-align: center;">
+			{{varietal}} / {{appelation}}
+		</div>
+		<div class="text_item">
+			Your Rating
+		</div>
+		<div class="text_item" data-appbuilder-object="text" data-position="static">
+			{{rating}}
+		</div>
+		<div class="text_item" data-appbuilder-object="text" data-position="static">
+			{{storeBottlePrice}}
+		</div>
+		<div class="text_item" data-appbuilder-object="text" data-position="static">
+			Average Rating
+		</div>
+		<div class="text_item" data-appbuilder-object="text" data-position="static">
+			(stars)
+		</div>
+		<div class="text_item" data-appbuilder-object="text" data-position="static">
+			$0.00
+		</div>
+		<div class="textarea_element form_element" style="width: 100%; overflow: hidden;">
+			<label for="">Notes</label><textarea>{{notes}}</textarea>
+		</div>
+		<img src="images/blank.gif" style="width: 50px; height: 50px;" alt="Title" class="" title="">
+    </script>
+
 </html>
