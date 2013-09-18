@@ -5,7 +5,31 @@ var nextId = 0;
 
 function main() {
     initWineEntries(wineTestData);
+    initEnterPage();
     initSearch();
+}
+
+function initEnterPage() {
+    $('cameraButton').on('tap', addPhotoToWine)
+}
+
+function addPhotoToWine() {
+    if (cordovaReady) {
+        navigator.camera.getPicture(photoSuccess, photoError);
+    } else {
+        alert('Camera is not available');
+    }
+}
+
+function photoSuccess(imageURI) {
+    console.log('Photo at: ' + imageURI);    
+}
+
+function photoError(message) {
+    // IOS quirk
+    setTimeout(function() {
+        alert('Error taking photo');
+    }, 0);
 }
 
 function initSearch() {
@@ -83,10 +107,10 @@ function prepareEnterPage(id) {
         item.rating = currentWine.rating;
     }
 
-    var $pageEnter = $('#pageEnter');
+    var $pageEnterBody = $('#pageEnterBody');
     var enterTemplate = $('#pageEnterTemplate').html();
     var html = Mustache.to_html(enterTemplate, item);
-    $pageEnter.html(html);
+    $pageEnterBody.html(html);
     var score = (currentWine !== null) ? item.rating : 0;
     $('#pageEnterTemplateRating').raty({score: score});
 }

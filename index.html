@@ -11,17 +11,23 @@
 	    <script src="js/mustache-0.7.2.min.js"></script>
 	    <script src="js/jq.appframework.js"></script>
         <script src="jqplugins/raty-master/lib/jquery.raty.js"></script>
-        <script src="intelxdk.js"></script>
+        <script src="cordova.js"></script>
 
         <script type="text/javascript" language="javascript">
-            // This event handler is fired once the AppMobi libraries are ready
-            function onDeviceReady() {
+            // Launch the application as soon as DOM is ready
+            function onDOMReady() {
                 setTimeout(function(){
                     $.ui.launch();
                 },50);
             }
-
-            $(onDeviceReady);
+            $(onDOMReady);
+            
+            // Enable cordova features when it activates
+            var cordovaReady = false;
+            function onCordovaReady() {
+                cordovaReady = true;
+            }
+            document.addEventListener("deviceready", onCordovaReady, false);
         </script> 
 
         <script src="js/appframework.ui.js"></script>
@@ -64,6 +70,8 @@
 
         <!-- Enter Page (enter / edit details about a wine) -->
         <div class="panel" title="Enter Wine" id="pageEnter" data-appbuilder-object="page" style="" data-header="header_1">
+            <div id="pageEnterBody"></div>
+            <a class="button" href="#" style="" data-appbuilder-object="button" id="cameraButton">Camera</a>
 	</div>
 </div>
           
@@ -163,7 +171,6 @@
 			<label for="">Notes</label><textarea id="wineNotes">{{#notes}}{{notes}}{{/notes}}</textarea>
 		</div>
 		<img src="images/blank.gif" style="width:50px;height:50px" alt="Title" class="">
-		<a class="button" href="#" style="" data-appbuilder-object="button" data-transition="slide" id="">Camera</a>
     </script>
 
 </html>
