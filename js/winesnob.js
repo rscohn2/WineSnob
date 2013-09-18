@@ -19,7 +19,6 @@ function initSearch() {
     var $splash = $('#pageMainSplash');
     var $wineCount = $('#pageMainWineCount');
     var listTemplate = $('#pageMainSearchItem').html();
-
     $wineCount.text(wineData.length);
     $splash.show();
     $searchResults.hide();
@@ -67,6 +66,7 @@ function pageMainItemClicked(id) {
     var detailsTemplate = $('#pageDetailsTemplate').html();
     var html = Mustache.to_html(detailsTemplate, item);
     $pageDetails.html(html);
+    $('#pageDetailsMyRating').raty({ score: wine.rating, readOnly: true });
     $pageDetailsHeaderName.html(wine.name);
 }
 
