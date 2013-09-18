@@ -88,6 +88,7 @@ function prepareEnterPage(id) {
     var enterTemplate = $('#pageEnterTemplate').html();
     var html = Mustache.to_html(enterTemplate, item);
     $pageEnter.html(html);
+    $('#pageEnterTemplateRating').raty({score: currentWine.rating});
 }
 
 function findWineById(id) {
