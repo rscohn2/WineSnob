@@ -16,17 +16,12 @@
         <script type="text/javascript" language="javascript">
             // This event handler is fired once the AppMobi libraries are ready
             function onDeviceReady() {
-                //use AppMobi viewport to handle device resolution differences if you want
-               
-                //hide splash screen now that our app is ready to run
-                AppMobi.device.hideSplashScreen();
                 setTimeout(function(){
                     $.ui.launch();
                 },50);
             }
 
-            //initial event handler to detect when appMobi is ready to roll
-            document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+            $(onDeviceReady);
         </script> 
 
         <script src="js/appframework.ui.js"></script>
