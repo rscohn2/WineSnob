@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--HTML5 doctype-->
 <html>
@@ -9,22 +8,29 @@
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <script src="js/jquery-1.10.2.min.js"></script>
 	    <script src="js/mustache-0.7.2.min.js"></script>
-	    <script src="js/jq.appframework.js"></script>
+	    <script src="af/jq.appframework.js"></script>
         <script src="jqplugins/raty-master/lib/jquery.raty.js"></script>
-        <script src="intelxdk.js"></script>
+        <script src="cordova.js"></script>
 
         <script type="text/javascript" language="javascript">
-            // This event handler is fired once the AppMobi libraries are ready
-            function onDeviceReady() {
+            // Launch the application as soon as DOM is ready
+            function onDOMReady() {
                 setTimeout(function(){
                     $.ui.launch();
                 },50);
             }
-
-            $(onDeviceReady);
+            $(onDOMReady);
+            
+            // Enable cordova features when it activates
+            var cordovaReady = false;
+            function onCordovaReady() {
+                console.log('cordova ready');
+                cordovaReady = true;
+            }
+            document.addEventListener("deviceready", onCordovaReady, false);
         </script> 
 
-        <script src="js/appframework.ui.js"></script>
+        <script src="af/appframework.ui.js"></script>
         <script>
             $.ui.autoLaunch=false;
             $.ui.useOSThemes=true;
@@ -34,8 +40,8 @@
                 $("#afui").removeClass("ios");
             });
         </script>
-        <link href="css/icons.css" rel="stylesheet" type="text/css"></link>
-        <link href="css/af.ui.css" rel="stylesheet" type="text/css"></link>
+        <link href="af/icons.css" rel="stylesheet" type="text/css"></link>
+        <link href="af/af.ui.css" rel="stylesheet" type="text/css"></link>
         <link href="css/style.css" rel="stylesheet" type="text/css"></link>
     </head>
 
@@ -64,11 +70,14 @@
 
         <!-- Enter Page (enter / edit details about a wine) -->
         <div class="panel" title="Enter Wine" id="pageEnter" data-appbuilder-object="page" style="" data-header="header_1">
+            <div id="pageEnterBody"></div>
+            <a class="button" href="#" style="" data-appbuilder-object="button" id="cameraButton">Camera</a>
 	</div>
 </div>
           
 <div id="navbar">
-	<a href="#pageMain" class="icon home">Home</a><a href="#pageEnter" onclick="addButtonClicked()" class="icon add">Add</a>
+	<a href="#pageMain" onclick="homeButtonClicked()" class="icon home">Home</a>
+    <a href="#pageEnter" onclick="addButtonClicked()" class="icon add">Add</a>
 </div>
         
 <header id="header_0" data-appbuilder-object="header">
@@ -80,7 +89,8 @@
 	<h1 class="">
 		Enter Wine
 	</h1>
-	<a id="cancelButton" href="#pageMain" class="button" style="float:left;">Cancel</a><a id="saveButton" href="#pageMain" class="button" style="float:right;">Save</a>
+	<a id="cancelButton" href="#pageMain" class="button" style="float:left;">Cancel</a>
+    <a id="saveButton" href="#pageMain" class="button" onclick="saveEnterPage()" style="float:right;">Save</a>
 </header>
 <header id="header_2" data-appbuilder-object="header">
 	<h1 id="pageDetailsHeaderName" class="">
@@ -110,29 +120,30 @@
 
     <!-- Wine details on the Details Page (describes a single wine) -->
     <script type="text/template" id="pageDetailsTemplate">
-		<div class="text_item" style="text-align: center;">
+		<div class="text_item beginDescriptionItem" style="text-align: center;">
 			{{varietal}} / {{appelation}}
 		</div>
-		<div class="text_item">
+		<div class="text_item beginDescriptionItem">
 			Your Rating
 		</div>
 
         <div id="pageDetailsMyRating"></div> 
 
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			${{priceBottleStore}} / ${{priceGlass}} / ${{priceBottleRestaurant}}
+		<div class="text_item beginDescriptionItem" data-appbuilder-object="text" data-position="static">
+			{{priceBottleStore}} / {{priceGlass}} / {{priceBottleRestaurant}}
 		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
+        <hr>
+		<div class="text_item beginDescriptionItem" data-appbuilder-object="text" data-position="static">
 			Average Rating
 		</div>
 		<div class="text_item" data-appbuilder-object="text" data-position="static">
 			(stars)
 		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
+		<div class="text_item beginDescriptionItem" data-appbuilder-object="text" data-position="static">
 			$0.00 / $0.00 / $0.00
 		</div>
-		<div class="textarea_element form_element" style="width: 100%; overflow: hidden;">
-			<textarea>{{notes}}</textarea>
+		<div class="textarea_element form_element beginDescriptionItem" style="width: 100%; overflow: hidden;">
+			<textarea readonly>{{notes}}</textarea>
 		</div>
 		<img src="images/blank.gif" style="width: 50px; height: 50px;" alt="Title" class="" title="">
     </script>
@@ -152,18 +163,24 @@
 			<input type="text" style="float:left;" id="wineAppelation" {{#appelation}}value="{{appelation}}"{{/appelation}}{{^appelation}}placeholder="Napa Valley"{{/appelation}}>
 		</div>
 		<div class="input_element form_element" style="width:100%;overflow:hidden">
-			<label for="">Price (bottle)</label>
-			<input type="text" style="float:left;" id="" placeholder="$0.00">
+			<label for="">Price / bottle (store)</label>
+			<input type="text" style="float:left;" id="winePriceBottleStore" {{#priceBottleStore}}value="{{priceBottleStore}}"{{/priceBottleStore}}{{^priceBottleStore}}placeholder="$0.00"{{/priceBottleStore}}>
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="">Price / glass (restaurant)</label>
+			<input type="text" style="float:left;" id="winePriceGlass" {{#priceGlass}}value="{{priceGlass}}"{{/priceGlass}}{{^priceGlass}}placeholder="$0.00"{{/priceGlass}}>
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="">Price / bottle (restaurant)</label>
+			<input type="text" style="float:left;" id="winePriceBottleRestaurant" {{#priceBottleRestaurant}}value="{{priceBottleRestaurant}}"{{/priceBottleRestaurant}}{{^priceBottleRestaurant}}placeholder="$0.00"{{/priceBottleRestaurant}}>
 		</div>
         
         <div id="pageEnterTemplateRating"></div>
 
 		<div class="textarea_element form_element" style="width:100%;overflow:hidden">
-			<label for="">Notes</label><textarea id="">{{#notes}}{{notes}}{{/notes}}</textarea>
+			<label for="">Notes</label><textarea id="wineNotes">{{#notes}}{{notes}}{{/notes}}</textarea>
 		</div>
 		<img src="images/blank.gif" style="width:50px;height:50px" alt="Title" class="">
-		<a class="button" href="#" style="" data-appbuilder-object="button" data-transition="slide" id="">Camera</a>
-        <input type="file" accept="image/*;capture=camera">
     </script>
 
 </html>

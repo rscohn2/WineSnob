@@ -1,28 +1,46 @@
 var wineData = null;
 var fuseSearcher = null;
 var currentWine = null;
+var nextId = 0;
 
 function main() {
-    initLocalStorage();
+    initWineEntries(wineTestData);
+    initEnterPage();
     initSearch();
 }
 
-function initLocalStorage() {
-    localStorage['wine-db'] = wineTestData;
-    wineData = wineTestData;
-    var options = {keys: ['name']};
-    fuseSearcher = new Fuse(wineData, options);
+function initEnterPage() {
+    $('#cameraButton').click(addPhotoToWine);
+}
+
+function addPhotoToWine() {
+    if (cordovaReady) {
+        console.log('taking a picure');
+        navigator.camera.getPicture(photoSuccess, photoError);
+    } else {
+        alert('Camera is not available');
+    }
+}
+
+function photoSuccess(imageURI) {
+    console.log('Photo at: ' + imageURI);    
+}
+
+function photoError(message) {
+    console.log('photo error');
+    // IOS quirk
+    setTimeout(function() {
+        alert('Error taking photo');
+    }, 0);
 }
 
 function initSearch() {
     var $searchBox = $('#pageMainSearchBox');
     var $searchResults = $('#pageMainWineList');
     var $splash = $('#pageMainSplash');
-    var $wineCount = $('#pageMainWineCount');
     var listTemplate = $('#pageMainSearchItem').html();
-    $wineCount.text(wineData.length);
-    $splash.show();
-    $searchResults.hide();
+
+    pageMainShowSplash();
 
     var lastText = '';
     $searchBox.keyup(function() {
@@ -37,12 +55,22 @@ function initSearch() {
                 $searchResults.show();
             }
             else {
-                $wineCount.text(wineData.length);
-                $splash.show();
-                $searchResults.hide();
+                pageMainShowSplash();
             }
         }
     });
+}
+
+function pageMainShowSplash() {
+    var $searchBox = $('#pageMainSearchBox');
+    var $searchResults = $('#pageMainWineList');
+    var $splash = $('#pageMainSplash');
+    var $wineCount = $('#pageMainWineCount');
+
+    $searchBox.val('');
+    $wineCount.text(wineData.length);
+    $splash.show();
+    $searchResults.hide();
 }
 
 function pageMainItemClicked(id) {
@@ -51,9 +79,9 @@ function pageMainItemClicked(id) {
         varietal: currentWine.varietal,
         appelation: currentWine.appelation,
         rating:  currentWine.rating,
-        priceBottleStore: currentWine.storeBottlePrice.toFixed(2),
-        priceGlass: currentWine.glassPrice.toFixed(2),
-        priceBottleRestaurant: currentWine.restaurantBottlePrice.toFixed(2),
+        priceBottleStore: getDisplayPrice(currentWine.priceBottleStore),
+        priceGlass: getDisplayPrice(currentWine.priceGlass),
+        priceBottleRestaurant: getDisplayPrice(currentWine.priceBottleRestaurant),
         notes: currentWine.notes
     };
 
@@ -66,9 +94,27 @@ function pageMainItemClicked(id) {
     $pageDetailsHeaderName.html(currentWine.name);
 }
 
+function getDisplayPrice(price) {
+    return ((typeof price === 'number') ? ('$' + price.toFixed(2)) : '-');
+}
+
+function getEditPrice(price) {
+    return ((price) ? ('$' + price.toFixed(2)) : null);
+}
+
+function parsePrice(price) {
+    price = (price[0] === '$') ? price.slice(1) : price;
+    var val = parseFloat(price);
+    return (isNaN(val)) ? null : val;
+}
+
 function addButtonClicked() {
     currentWine = null;
     prepareEnterPage();
+}
+
+function homeButtonClicked() {
+    pageMainShowSplash();
 }
 
 function editButtonClicked() {
@@ -82,13 +128,40 @@ function prepareEnterPage(id) {
         item.varietal = currentWine.varietal;
         item.appelation = currentWine.appelation;
         item.notes = currentWine.notes;
+        item.rating = currentWine.rating;
+        item.priceBottleStore = getEditPrice(currentWine.priceBottleStore);
+        item.priceGlass = getEditPrice(currentWine.priceGlass);
+        item.priceBottleRestaurant = getEditPrice(currentWine.priceBottleRestaurant);
     }
 
-    var $pageEnter = $('#pageEnter');
+    var $pageEnterBody = $('#pageEnterBody');
     var enterTemplate = $('#pageEnterTemplate').html();
     var html = Mustache.to_html(enterTemplate, item);
-    $pageEnter.html(html);
-    $('#pageEnterTemplateRating').raty({score: currentWine.rating});
+    $pageEnterBody.html(html);
+    var score = (currentWine !== null) ? item.rating : 0;
+    $('#pageEnterTemplateRating').raty({score: score});
+}
+
+function saveEnterPage() {
+    var item = {
+        name: $('#wineName').val(),
+        varietal: $('#wineVarietal').val(),
+        appelation: $('#wineAppelation').val(),
+        notes: $('#wineNotes').val(),
+        rating: $('#pageEnterTemplateRating').raty('score'),
+        priceBottleStore: parsePrice($('#winePriceBottleStore').val()),
+        priceGlass: parsePrice($('#winePriceGlass').val()),
+        priceBottleRestaurant: parsePrice($('#winePriceBottleRestaurant').val())
+    };
+
+    if (currentWine) {
+        var index = findWineIndexById(currentWine.id);
+        changeWineEntry(index, item);
+    }
+    else {
+        addWineEntry(item);
+    }
+    pageMainShowSplash();
 }
 
 function findWineById(id) {
@@ -97,6 +170,42 @@ function findWineById(id) {
             return true;
         }
     });
+}
+
+function findWineIndexById(id) {
+    for (var i = 0;  i < wineData.length;  i++) {
+        if (wineData[i].id === id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function initWineEntries(wines) {
+    localStorage['wine-db'] = wines;
+    wineData = wines;
+    nextId = wineData.length;
+    indexWines();
+}
+
+function changeWineEntry(index, item) {
+    item.id = wineData[index].id;
+    wineData[index] = item;
+    localStorage['wine-db'][index] = item;
+    indexWines();
+}
+
+function addWineEntry(item) {
+    item.id = nextId.toString();
+    nextId++;
+    wineData.push(item);
+    localStorage['wine-db'][wineData.length-1] = item;
+    indexWines();
+}
+
+function indexWines() {
+    var options = {keys: ['name']};
+    fuseSearcher = new Fuse(wineData, options);
 }
 
 $(main);
