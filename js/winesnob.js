@@ -69,9 +69,9 @@ function pageMainItemClicked(id) {
         varietal: currentWine.varietal,
         appelation: currentWine.appelation,
         rating:  currentWine.rating,
-        priceBottleStore: getDisplayPrice(currentWine.storeBottlePrice),
-        priceGlass: getDisplayPrice(currentWine.glassPrice),
-        priceBottleRestaurant: getDisplayPrice(currentWine.restaurantBottlePrice),
+        priceBottleStore: getDisplayPrice(currentWine.priceBottleStore),
+        priceGlass: getDisplayPrice(currentWine.priceGlass),
+        priceBottleRestaurant: getDisplayPrice(currentWine.priceBottleRestaurant),
         notes: currentWine.notes
     };
 
@@ -86,6 +86,16 @@ function pageMainItemClicked(id) {
 
 function getDisplayPrice(price) {
     return ((typeof price === 'number') ? ('$' + price.toFixed(2)) : '-');
+}
+
+function getEditPrice(price) {
+    return ((price) ? ('$' + price.toFixed(2)) : null);
+}
+
+function parsePrice(price) {
+    price = (price[0] === '$') ? price.slice(1) : price;
+    var val = parseFloat(price);
+    return (isNaN(val)) ? null : val;
 }
 
 function addButtonClicked() {
@@ -105,6 +115,9 @@ function prepareEnterPage(id) {
         item.appelation = currentWine.appelation;
         item.notes = currentWine.notes;
         item.rating = currentWine.rating;
+        item.priceBottleStore = getEditPrice(currentWine.priceBottleStore);
+        item.priceGlass = getEditPrice(currentWine.priceGlass);
+        item.priceBottleRestaurant = getEditPrice(currentWine.priceBottleRestaurant);
     }
 
     var $pageEnterBody = $('#pageEnterBody');
@@ -121,7 +134,10 @@ function saveEnterPage() {
         varietal: $('#wineVarietal').val(),
         appelation: $('#wineAppelation').val(),
         notes: $('#wineNotes').val(),
-        rating: $('#pageEnterTemplateRating').raty('score')
+        rating: $('#pageEnterTemplateRating').raty('score'),
+        priceBottleStore: parsePrice($('#winePriceBottleStore').val()),
+        priceGlass: parsePrice($('#winePriceGlass').val()),
+        priceBottleRestaurant: parsePrice($('#winePriceBottleRestaurant').val())
     };
 
     if (currentWine) {

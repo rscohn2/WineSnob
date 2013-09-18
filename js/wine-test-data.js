@@ -4,9 +4,9 @@ var wineTestData = [
         name: 'winea',
         varietal: 'varietya',
         appelation: 'appelationa',
-        glassPrice: 1,
-        storeBottlePrice: 10,
-        restaurantBottlePrice: 20,
+        priceBottleStore: 10,
+        priceGlass: 1,
+        priceBottleRestaurant: 20,
         rating: 4,
         notes: 'Some notes about winea',
         photo: null
@@ -16,9 +16,9 @@ var wineTestData = [
         name: 'wineb',
         varietal: 'varietyb',
         appelation: 'appelationb',
-        glassPrice: 2,
-        storeBottlePrice: 11,
-        restaurantBottlePrice: 21,
+        priceBottleStore: 11,
+        priceGlass: 2,
+        priceBottleRestaurant: 21,
         rating: 3,
         notes: 'Some notes about wineb',
         photo: null
@@ -28,12 +28,11 @@ var wineTestData = [
         name: 'winec',
         varietal: 'varietyc',
         appelation: 'appelationc',
-        glassPrice: 3,
-        storeBottlePrice: 11,
-        restaurantBottlePrice: 21,
+        priceBottleStore: 11,
+        priceGlass: 3,
+        priceBottleRestaurant: 21,
         rating: 2,
         notes: 'Some notes about winec',
         photo: null
     }
 ];
-

@@ -161,8 +161,16 @@
 			<input type="text" style="float:left;" id="wineAppelation" {{#appelation}}value="{{appelation}}"{{/appelation}}{{^appelation}}placeholder="Napa Valley"{{/appelation}}>
 		</div>
 		<div class="input_element form_element" style="width:100%;overflow:hidden">
-			<label for="">Price (bottle)</label>
-			<input type="text" style="float:left;" id="" placeholder="$0.00">
+			<label for="">Price / bottle (store)</label>
+			<input type="text" style="float:left;" id="winePriceBottleStore" {{#priceBottleStore}}value="{{priceBottleStore}}"{{/priceBottleStore}}{{^priceBottleStore}}placeholder="$0.00"{{/priceBottleStore}}>
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="">Price / glass (restaurant)</label>
+			<input type="text" style="float:left;" id="winePriceGlass" {{#priceGlass}}value="{{priceGlass}}"{{/priceGlass}}{{^priceGlass}}placeholder="$0.00"{{/priceGlass}}>
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="">Price / bottle (restaurant)</label>
+			<input type="text" style="float:left;" id="winePriceBottleRestaurant" {{#priceBottleRestaurant}}value="{{priceBottleRestaurant}}"{{/priceBottleRestaurant}}{{^priceBottleRestaurant}}placeholder="$0.00"{{/priceBottleRestaurant}}>
 		</div>
         
         <div id="pageEnterTemplateRating"></div>
