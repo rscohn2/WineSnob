@@ -1,17 +1,11 @@
 var wineData = null;
 var fuseSearcher = null;
 var currentWine = null;
+var nextId = 0;
 
 function main() {
-    initLocalStorage();
+    initWineEntries(wineTestData);
     initSearch();
-}
-
-function initLocalStorage() {
-    localStorage['wine-db'] = wineTestData;
-    wineData = wineTestData;
-    var options = {keys: ['name']};
-    fuseSearcher = new Fuse(wineData, options);
 }
 
 function initSearch() {
@@ -51,9 +45,9 @@ function pageMainItemClicked(id) {
         varietal: currentWine.varietal,
         appelation: currentWine.appelation,
         rating:  currentWine.rating,
-        priceBottleStore: currentWine.storeBottlePrice.toFixed(2),
-        priceGlass: currentWine.glassPrice.toFixed(2),
-        priceBottleRestaurant: currentWine.restaurantBottlePrice.toFixed(2),
+        priceBottleStore: getDisplayPrice(currentWine.storeBottlePrice),
+        priceGlass: getDisplayPrice(currentWine.glassPrice),
+        priceBottleRestaurant: getDisplayPrice(currentWine.restaurantBottlePrice),
         notes: currentWine.notes
     };
 
@@ -64,6 +58,10 @@ function pageMainItemClicked(id) {
     $pageDetails.html(html);
     $('#pageDetailsMyRating').raty({ score: currentWine.rating, readOnly: true });
     $pageDetailsHeaderName.html(currentWine.name);
+}
+
+function getDisplayPrice(price) {
+    return ((typeof price === 'number') ? ('$' + price.toFixed(2)) : '-');
 }
 
 function addButtonClicked() {
@@ -82,13 +80,33 @@ function prepareEnterPage(id) {
         item.varietal = currentWine.varietal;
         item.appelation = currentWine.appelation;
         item.notes = currentWine.notes;
+        item.rating = currentWine.rating;
     }
 
     var $pageEnter = $('#pageEnter');
     var enterTemplate = $('#pageEnterTemplate').html();
     var html = Mustache.to_html(enterTemplate, item);
     $pageEnter.html(html);
-    $('#pageEnterTemplateRating').raty({score: currentWine.rating});
+    var score = (currentWine !== null) ? item.rating : 0;
+    $('#pageEnterTemplateRating').raty({score: score});
+}
+
+function saveEnterPage() {
+    var item = {
+        name: $('#wineName').val(),
+        varietal: $('#wineVarietal').val(),
+        appelation: $('#wineAppelation').val(),
+        notes: $('#wineNotes').val(),
+        rating: $('#pageEnterTemplateRating').raty('score')
+    };
+
+    if (currentWine) {
+        var index = findWineIndexById(currentWine.id);
+        changeWineEntry(index, item);
+    }
+    else {
+        addWineEntry(item);
+    }
 }
 
 function findWineById(id) {
@@ -97,6 +115,42 @@ function findWineById(id) {
             return true;
         }
     });
+}
+
+function findWineIndexById(id) {
+    for (var i = 0;  i < wineData.length;  i++) {
+        if (wineData[i].id === id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function initWineEntries(wines) {
+    localStorage['wine-db'] = wines;
+    wineData = wines;
+    nextId = wineData.length;
+    indexWines();
+}
+
+function changeWineEntry(index, item) {
+    item.id = wineData[index].id;
+    wineData[index] = item;
+    localStorage['wine-db'][index] = item;
+    indexWines();
+}
+
+function addWineEntry(item) {
+    item.id = nextId.toString();
+    nextId++;
+    wineData.push(item);
+    localStorage['wine-db'][wineData.length-1] = item;
+    indexWines();
+}
+
+function indexWines() {
+    var options = {keys: ['name']};
+    fuseSearcher = new Fuse(wineData, options);
 }
 
 $(main);

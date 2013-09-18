@@ -80,7 +80,7 @@
 	<h1 class="">
 		Enter Wine
 	</h1>
-	<a id="cancelButton" href="#pageMain" class="button" style="float:left;">Cancel</a><a id="saveButton" href="#pageMain" class="button" style="float:right;">Save</a>
+	<a id="cancelButton" href="#pageMain" class="button" style="float:left;">Cancel</a><a id="saveButton" href="#pageMain" class="button" onclick="saveEnterPage()" style="float:right;">Save</a>
 </header>
 <header id="header_2" data-appbuilder-object="header">
 	<h1 id="pageDetailsHeaderName" class="">
@@ -120,7 +120,7 @@
         <div id="pageDetailsMyRating"></div> 
 
 		<div class="text_item" data-appbuilder-object="text" data-position="static">
-			${{priceBottleStore}} / ${{priceGlass}} / ${{priceBottleRestaurant}}
+			{{priceBottleStore}} / {{priceGlass}} / {{priceBottleRestaurant}}
 		</div>
 		<div class="text_item" data-appbuilder-object="text" data-position="static">
 			Average Rating
@@ -159,7 +159,7 @@
         <div id="pageEnterTemplateRating"></div>
 
 		<div class="textarea_element form_element" style="width:100%;overflow:hidden">
-			<label for="">Notes</label><textarea id="">{{#notes}}{{notes}}{{/notes}}</textarea>
+			<label for="">Notes</label><textarea id="wineNotes">{{#notes}}{{notes}}{{/notes}}</textarea>
 		</div>
 		<img src="images/blank.gif" style="width:50px;height:50px" alt="Title" class="">
 		<a class="button" href="#" style="" data-appbuilder-object="button" data-transition="slide" id="">Camera</a>
