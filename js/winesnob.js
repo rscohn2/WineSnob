@@ -1,5 +1,6 @@
 var wineData = null;
 var fuseSearcher = null;
+var currentWine = null;
 
 function main() {
     initLocalStorage();
@@ -45,20 +46,15 @@ function initSearch() {
 }
 
 function pageMainItemClicked(id) {
-    var wine = _.find(wineData, function(el) {
-        if (el.id === id){
-            return true;
-        }
-    });
-
+    currentWine = findWineById(id);
     var item = {
-        varietal: wine.varietal,
-        appelation: wine.appelation,
-        rating: wine.rating,
-        priceBottleStore: wine.storeBottlePrice.toFixed(2),
-        priceGlass: wine.glassPrice.toFixed(2),
-        priceBottleRestaurant: wine.restaurantBottlePrice.toFixed(2),
-        notes: wine.notes
+        varietal: currentWine.varietal,
+        appelation: currentWine.appelation,
+        rating:  currentWine.rating,
+        priceBottleStore: currentWine.storeBottlePrice.toFixed(2),
+        priceGlass: currentWine.glassPrice.toFixed(2),
+        priceBottleRestaurant: currentWine.restaurantBottlePrice.toFixed(2),
+        notes: currentWine.notes
     };
 
     var $pageDetails = $('#pageDetails');
@@ -66,8 +62,40 @@ function pageMainItemClicked(id) {
     var detailsTemplate = $('#pageDetailsTemplate').html();
     var html = Mustache.to_html(detailsTemplate, item);
     $pageDetails.html(html);
-    $('#pageDetailsMyRating').raty({ score: wine.rating, readOnly: true });
-    $pageDetailsHeaderName.html(wine.name);
+    $('#pageDetailsMyRating').raty({ score: currentWine.rating, readOnly: true });
+    $pageDetailsHeaderName.html(currentWine.name);
+}
+
+function addButtonClicked() {
+    currentWine = null;
+    prepareEnterPage();
+}
+
+function editButtonClicked() {
+    prepareEnterPage();
+}
+
+function prepareEnterPage(id) {
+    var item = {};
+    if (currentWine !== null) {
+        item.name = currentWine.name;
+        item.varietal = currentWine.varietal;
+        item.appelation = currentWine.appelation;
+        item.notes = currentWine.notes;
+    }
+
+    var $pageEnter = $('#pageEnter');
+    var enterTemplate = $('#pageEnterTemplate').html();
+    var html = Mustache.to_html(enterTemplate, item);
+    $pageEnter.html(html);
+}
+
+function findWineById(id) {
+    return _.find(wineData, function(el) {
+        if (el.id === id){
+            return true;
+        }
+    });
 }
 
 $(main);

@@ -69,36 +69,11 @@
 
         <!-- Enter Page (enter / edit details about a wine) -->
         <div class="panel" title="Enter Wine" id="pageEnter" data-appbuilder-object="page" style="" data-header="header_1">
-		<div class="input_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="input" data-position="static">
-			<label for="wineName">Name</label>
-			<input type="text" style="float:left;" id="wineName" placeholder="Enter Name">
-		</div>
-		<div class="input_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="input" data-position="static">
-			<label for="wineVarietal">Varietal</label>
-			<input type="text" style="float:left;" id="wineVarietal" placeholder="Cabernet">
-		</div>
-		<div class="input_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="input" data-position="static">
-			<label for="wineAppelation">Appelation</label>
-			<input type="text" style="float:left;" id="wineAppelation" placeholder="Napa Valley">
-		</div>
-		<div class="input_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="input" data-position="static">
-			<label for="">Price (bottle)</label>
-			<input type="text" style="float:left;" id="" placeholder="$0.00">
-		</div>
-		<div class="input_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="input" data-position="static">
-			<label for="">Rating</label>
-			<input type="text" style="float:left;" id="" placeholder="(stars)">
-		</div>
-		<div class="textarea_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="textarea" data-position="static">
-			<label for="">Notes</label><textarea id=""></textarea>
-		</div>
-		<img src="images/blank.gif" style="width:50px;height:50px" alt="Title" data-appbuilder-object="image" data-position="static" class="">
-		<a class="button" href="#" style="" data-appbuilder-object="button" data-position="static" data-transition="slide" id="">Camera</a>
 	</div>
 </div>
           
 <div id="navbar">
-	<a href="#pageMain" class="icon home">Home</a><a href="#pageEnter" class="icon add">Add</a>
+	<a href="#pageMain" class="icon home">Home</a><a href="#pageEnter" onclick="addButtonClicked()" class="icon add">Add</a>
 </div>
         
 <header id="header_0" data-appbuilder-object="header">
@@ -116,7 +91,7 @@
 	<h1 id="pageDetailsHeaderName" class="">
 		Wine Name
 	</h1>
-	<a id="editButton" href="#pageEnter" class="button" style="float:left;">Edit</a>
+	<a id="editButton" href="#pageEnter" onclick="editButtonClicked()" class="button" style="float:left;">Edit</a>
 </header>
         </div>
         
@@ -165,6 +140,35 @@
 			<textarea>{{notes}}</textarea>
 		</div>
 		<img src="images/blank.gif" style="width: 50px; height: 50px;" alt="Title" class="" title="">
+    </script>
+
+    <!-- Enter / Edit wine details -->
+    <script type="text/template" id="pageEnterTemplate">
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="wineName">Name</label>
+			<input type="text" style="float:left;" id="wineName" {{#name}}value="{{name}}"{{/name}}{{^name}}placeholder="Enter Name"{{/name}}>
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="wineVarietal">Varietal</label>
+			<input type="text" style="float:left;" id="wineVarietal" {{#varietal}}value="{{varietal}}"{{/varietal}}{{^varietal}}placeholder="Cabernet"{{/varietal}}>
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="wineAppelation">Appelation</label>
+			<input type="text" style="float:left;" id="wineAppelation" {{#appelation}}value="{{appelation}}"{{/appelation}}{{^appelation}}placeholder="Napa Valley"{{/appelation}}>
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="">Price (bottle)</label>
+			<input type="text" style="float:left;" id="" placeholder="$0.00">
+		</div>
+		<div class="input_element form_element" style="width:100%;overflow:hidden">
+			<label for="">Rating</label>
+			<input type="text" style="float:left;" id="" placeholder="(stars)">
+		</div>
+		<div class="textarea_element form_element" style="width:100%;overflow:hidden">
+			<label for="">Notes</label><textarea id="">{{#notes}}{{notes}}{{/notes}}</textarea>
+		</div>
+		<img src="images/blank.gif" style="width:50px;height:50px" alt="Title" class="">
+		<a class="button" href="#" style="" data-appbuilder-object="button" data-transition="slide" id="">Camera</a>
     </script>
 
 </html>
