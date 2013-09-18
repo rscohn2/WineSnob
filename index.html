@@ -110,28 +110,29 @@
 
     <!-- Wine details on the Details Page (describes a single wine) -->
     <script type="text/template" id="pageDetailsTemplate">
-		<div class="text_item" style="text-align: center;">
+		<div class="text_item beginDescriptionItem" style="text-align: center;">
 			{{varietal}} / {{appelation}}
 		</div>
-		<div class="text_item">
+		<div class="text_item beginDescriptionItem">
 			Your Rating
 		</div>
 
         <div id="pageDetailsMyRating"></div> 
 
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
+		<div class="text_item beginDescriptionItem" data-appbuilder-object="text" data-position="static">
 			{{priceBottleStore}} / {{priceGlass}} / {{priceBottleRestaurant}}
 		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
+        <hr>
+		<div class="text_item beginDescriptionItem" data-appbuilder-object="text" data-position="static">
 			Average Rating
 		</div>
 		<div class="text_item" data-appbuilder-object="text" data-position="static">
 			(stars)
 		</div>
-		<div class="text_item" data-appbuilder-object="text" data-position="static">
+		<div class="text_item beginDescriptionItem" data-appbuilder-object="text" data-position="static">
 			$0.00 / $0.00 / $0.00
 		</div>
-		<div class="textarea_element form_element" style="width: 100%; overflow: hidden;">
+		<div class="textarea_element form_element beginDescriptionItem" style="width: 100%; overflow: hidden;">
 			<textarea>{{notes}}</textarea>
 		</div>
 		<img src="images/blank.gif" style="width: 50px; height: 50px;" alt="Title" class="" title="">

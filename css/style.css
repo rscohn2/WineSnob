@@ -4,4 +4,9 @@
 
 #pageEnterTemplateRating {
     float: right;
+    margin: 20px;
+}
+
+.beginDescriptionItem {
+    margin-top: 20px;
 }
