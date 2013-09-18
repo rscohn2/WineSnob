@@ -10,11 +10,12 @@ function main() {
 }
 
 function initEnterPage() {
-    $('cameraButton').on('tap', addPhotoToWine)
+    $('#cameraButton').click(addPhotoToWine);
 }
 
 function addPhotoToWine() {
     if (cordovaReady) {
+        console.log('taking a picure');
         navigator.camera.getPicture(photoSuccess, photoError);
     } else {
         alert('Camera is not available');
@@ -26,6 +27,7 @@ function photoSuccess(imageURI) {
 }
 
 function photoError(message) {
+    console.log('photo error');
     // IOS quirk
     setTimeout(function() {
         alert('Error taking photo');

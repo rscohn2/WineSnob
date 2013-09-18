@@ -25,6 +25,7 @@
             // Enable cordova features when it activates
             var cordovaReady = false;
             function onCordovaReady() {
+                console.log('cordova ready');
                 cordovaReady = true;
             }
             document.addEventListener("deviceready", onCordovaReady, false);
