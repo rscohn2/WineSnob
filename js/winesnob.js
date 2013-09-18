@@ -18,17 +18,31 @@ function initSearch() {
     var $searchBox = $('#pageMainSearchBox');
     var $searchResults = $('#pageMainWineList');
     var $splash = $('#pageMainSplash');
+    var $wineCount = $('#pageMainWineCount');
     var listTemplate = $('#pageMainSearchItem').html();
+
+    $wineCount.text(wineData.length);
     $splash.show();
     $searchResults.hide();
 
+    var lastText = '';
     $searchBox.keyup(function() {
         var text = $searchBox.val();
-        var results = fuseSearcher.search(text);
-        var html = Mustache.to_html(listTemplate, {results: results});
-        $searchResults.html(html);
-        $splash.hide();
-        $searchResults.show();
+        if (text !== lastText) {
+            lastText = text;
+            if (text) {
+                var results = fuseSearcher.search(text);
+                var html = Mustache.to_html(listTemplate, {results: results});
+                $searchResults.html(html);
+                $splash.hide();
+                $searchResults.show();
+            }
+            else {
+                $wineCount.text(wineData.length);
+                $splash.show();
+                $searchResults.hide();
+            }
+        }
     });
 }
 

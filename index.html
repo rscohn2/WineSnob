@@ -42,27 +42,32 @@
         <link href="css/af.ui.css" rel="stylesheet" type="text/css"></link>
         <link href="css/style.css" rel="stylesheet" type="text/css"></link>
     </head>
+
     <body>
         <div id="afui" class='ios'>
-          
-<div id="header"></div>
-          
-<div id="content" style="">
-	          
-	<div class="panel" title="Main" id="pageMain" selected="selected" data-appbuilder-object="page" style="" data-header="header_0">
-		<div class="input_element form_element" style="width: 100%; overflow: hidden;" data-appbuilder-object="input" data-position="static">
-			<label for="pageMainSearchBox">Search</label>
-			<input type="text" style="float:left;" id="pageMainSearchBox" placeholder="Name, varietal, etc.">
-		</div>
-		<ul id="pageMainWineList" style="display:none" class="list" data-appbuilder-object="list" data-position="static"></ul>
-        <div id="pageMainSplash">
-            <p>You have <span id="pageMainWineCount">0</span> wines rated!</p>
-            <image src="images/splash.png" id="pageMainSplashImage"></image>
+
+        <div id="header"></div>
+
+        <div id="content" style="">
+
+        <!-- Main Page (search) -->
+        <div class="panel" title="Main" id="pageMain" selected="selected" data-appbuilder-object="page" style="" data-header="header_0">
+            <div class="input_element form_element" style="width: 100%; overflow: hidden;" data-appbuilder-object="input" data-position="static">
+                <label for="pageMainSearchBox">Search</label>
+                <input type="text" style="float:left;" id="pageMainSearchBox" placeholder="Name, varietal, etc.">
+            </div>
+            <ul id="pageMainWineList" style="display:none" class="list" data-appbuilder-object="list" data-position="static"></ul>
+            <div id="pageMainSplash">
+                <p>You have <span id="pageMainWineCount">0</span> wines rated!</p>
+                <image src="images/splash.png" id="pageMainSplashImage"></image>
+            </div>
         </div>
-	</div>
-	<div class="panel" title="Wine Details" id="pageDetails" data-appbuilder-object="page" style="" data-header="header_2">
-	</div>
-	<div class="panel" title="Enter Wine" id="pageEnter" data-appbuilder-object="page" style="" data-header="header_1">
+
+        <!-- Details Page (display details about one wine) -->
+        <div class="panel" title="Wine Details" id="pageDetails" data-appbuilder-object="page" style="" data-header="header_2"></div>
+
+        <!-- Enter Page (enter / edit details about a wine) -->
+        <div class="panel" title="Enter Wine" id="pageEnter" data-appbuilder-object="page" style="" data-header="header_1">
 		<div class="input_element form_element" style="width:100%;overflow:hidden" data-appbuilder-object="input" data-position="static">
 			<label for="wineName">Name</label>
 			<input type="text" style="float:left;" id="wineName" placeholder="Enter Name">
@@ -120,6 +125,10 @@
     <script src="js/winesnob.js"></script>
     </body>
 
+
+    <!-- Mustache Templates -->
+
+    <!-- List elements within the main page (search results) -->
     <script type="text/template" id="pageMainSearchItem">
         {{#results}}
         <li>
@@ -128,6 +137,7 @@
         {{/results}}
     </script>
 
+    <!-- Wine details on the Details Page (describes a single wine) -->
     <script type="text/template" id="pageDetailsTemplate">
 		<div class="text_item" style="text-align: center;">
 			{{varietal}} / {{appelation}}
