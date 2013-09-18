@@ -38,11 +38,9 @@ function initSearch() {
     var $searchBox = $('#pageMainSearchBox');
     var $searchResults = $('#pageMainWineList');
     var $splash = $('#pageMainSplash');
-    var $wineCount = $('#pageMainWineCount');
     var listTemplate = $('#pageMainSearchItem').html();
-    $wineCount.text(wineData.length);
-    $splash.show();
-    $searchResults.hide();
+
+    pageMainShowSplash();
 
     var lastText = '';
     $searchBox.keyup(function() {
@@ -57,12 +55,22 @@ function initSearch() {
                 $searchResults.show();
             }
             else {
-                $wineCount.text(wineData.length);
-                $splash.show();
-                $searchResults.hide();
+                pageMainShowSplash();
             }
         }
     });
+}
+
+function pageMainShowSplash() {
+    var $searchBox = $('#pageMainSearchBox');
+    var $searchResults = $('#pageMainWineList');
+    var $splash = $('#pageMainSplash');
+    var $wineCount = $('#pageMainWineCount');
+
+    $searchBox.val('');
+    $wineCount.text(wineData.length);
+    $splash.show();
+    $searchResults.hide();
 }
 
 function pageMainItemClicked(id) {
@@ -103,6 +111,10 @@ function parsePrice(price) {
 function addButtonClicked() {
     currentWine = null;
     prepareEnterPage();
+}
+
+function homeButtonClicked() {
+    pageMainShowSplash();
 }
 
 function editButtonClicked() {
@@ -149,6 +161,7 @@ function saveEnterPage() {
     else {
         addWineEntry(item);
     }
+    pageMainShowSplash();
 }
 
 function findWineById(id) {
