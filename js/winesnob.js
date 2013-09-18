@@ -22,8 +22,11 @@ function addPhotoToWine() {
     }
 }
 
-function photoSuccess(imageURI) {
-    console.log('Photo at: ' + imageURI);    
+function photoSuccess(imageUri) {
+    var $photo = $('#pageEnterPhoto');
+    $photo.attr('src', imageUri);
+    $photo.show();
+    currentWine.photo = imageUri;
 }
 
 function photoError(message) {
@@ -82,7 +85,8 @@ function pageMainItemClicked(id) {
         priceBottleStore: getDisplayPrice(currentWine.priceBottleStore),
         priceGlass: getDisplayPrice(currentWine.priceGlass),
         priceBottleRestaurant: getDisplayPrice(currentWine.priceBottleRestaurant),
-        notes: currentWine.notes
+        notes: currentWine.notes,
+        photo: currentWine.photo
     };
 
     var $pageDetails = $('#pageDetails');
@@ -109,7 +113,7 @@ function parsePrice(price) {
 }
 
 function addButtonClicked() {
-    currentWine = null;
+    currentWine = {};
     prepareEnterPage();
 }
 
@@ -121,45 +125,45 @@ function editButtonClicked() {
     prepareEnterPage();
 }
 
-function prepareEnterPage(id) {
-    var item = {};
-    if (currentWine !== null) {
-        item.name = currentWine.name;
-        item.varietal = currentWine.varietal;
-        item.appelation = currentWine.appelation;
-        item.notes = currentWine.notes;
-        item.rating = currentWine.rating;
-        item.priceBottleStore = getEditPrice(currentWine.priceBottleStore);
-        item.priceGlass = getEditPrice(currentWine.priceGlass);
-        item.priceBottleRestaurant = getEditPrice(currentWine.priceBottleRestaurant);
-    }
+function prepareEnterPage() {
+    var item = _.clone(currentWine);
+    item.priceBottleStore = getEditPrice(currentWine.priceBottleStore);
+    item.priceGlass = getEditPrice(currentWine.priceGlass);
+    item.priceBottleRestaurant = getEditPrice(currentWine.priceBottleRestaurant);
+    item.rating = (typeof currentWine.rating === 'number') ? currentWine.rating : 0;
 
     var $pageEnterBody = $('#pageEnterBody');
     var enterTemplate = $('#pageEnterTemplate').html();
     var html = Mustache.to_html(enterTemplate, item);
     $pageEnterBody.html(html);
-    var score = (currentWine !== null) ? item.rating : 0;
-    $('#pageEnterTemplateRating').raty({score: score});
+    $('#pageEnterTemplateRating').raty({score: item.rating});
+    var $photo = $('#pageEnterPhoto');
+    if (item.photo) {
+        $photo.show();
+    }
+    else {
+        $photo.hide();
+    }
 }
 
 function saveEnterPage() {
-    var item = {
-        name: $('#wineName').val(),
-        varietal: $('#wineVarietal').val(),
-        appelation: $('#wineAppelation').val(),
-        notes: $('#wineNotes').val(),
-        rating: $('#pageEnterTemplateRating').raty('score'),
-        priceBottleStore: parsePrice($('#winePriceBottleStore').val()),
-        priceGlass: parsePrice($('#winePriceGlass').val()),
-        priceBottleRestaurant: parsePrice($('#winePriceBottleRestaurant').val())
-    };
+    currentWine.name = $('#wineName').val();
+    currentWine.varietal = $('#wineVarietal').val();
+    currentWine.appelation = $('#wineAppelation').val();
+    currentWine.notes = $('#wineNotes').val();
+    currentWine.rating = $('#pageEnterTemplateRating').raty('score');
+    currentWine.priceBottleStore = parsePrice($('#winePriceBottleStore').val());
+    currentWine.priceGlass = parsePrice($('#winePriceGlass').val());
+    currentWine.priceBottleRestaurant = parsePrice($('#winePriceBottleRestaurant').val());
 
-    if (currentWine) {
+    if (currentWine.id) {
         var index = findWineIndexById(currentWine.id);
-        changeWineEntry(index, item);
+        changeWineEntry(index, currentWine);
     }
     else {
-        addWineEntry(item);
+        currentWine.id = nextId.toString();
+        nextId++;
+        addWineEntry(currentWine);
     }
     pageMainShowSplash();
 }
@@ -189,15 +193,12 @@ function initWineEntries(wines) {
 }
 
 function changeWineEntry(index, item) {
-    item.id = wineData[index].id;
     wineData[index] = item;
     localStorage['wine-db'][index] = item;
     indexWines();
 }
 
 function addWineEntry(item) {
-    item.id = nextId.toString();
-    nextId++;
     wineData.push(item);
     localStorage['wine-db'][wineData.length-1] = item;
     indexWines();
