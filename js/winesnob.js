@@ -1,6 +1,5 @@
 var wineData = null;
 var fuseSearcher = null;
-var wineCurrentItem = null;
 
 function main() {
     initLocalStorage();
@@ -47,17 +46,28 @@ function initSearch() {
 }
 
 function pageMainItemClicked(id) {
-    wineCurrentItem = _.find(wineData, function(el) {
+    var wine = _.find(wineData, function(el) {
         if (el.id === id){
             return true;
         }
-    })
+    });
+
+    var item = {
+        varietal: wine.varietal,
+        appelation: wine.appelation,
+        rating: wine.rating,
+        priceBottleStore: wine.storeBottlePrice.toFixed(2),
+        priceGlass: wine.glassPrice.toFixed(2),
+        priceBottleRestaurant: wine.restaurantBottlePrice.toFixed(2),
+        notes: wine.notes
+    };
+
     var $pageDetails = $('#pageDetails');
     var $pageDetailsHeaderName = $('#pageDetailsHeaderName');
     var detailsTemplate = $('#pageDetailsTemplate').html();
-    var html = Mustache.to_html(detailsTemplate, wineCurrentItem);
+    var html = Mustache.to_html(detailsTemplate, item);
     $pageDetails.html(html);
-    $pageDetailsHeaderName.html(wineCurrentItem.name);
+    $pageDetailsHeaderName.html(wine.name);
 }
 
 $(main);
