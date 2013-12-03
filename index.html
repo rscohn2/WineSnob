@@ -25,6 +25,7 @@
             var cordovaReady = false;
             function onCordovaReady() {
                 console.log('cordova ready');
+                navigator.splashscreen.hide();
                 cordovaReady = true;
             }
             document.addEventListener("deviceready", onCordovaReady, false);
