@@ -18,19 +18,12 @@
         <script src="js/winesnob.js"></script>
 
         <script type="text/javascript" language="javascript">
-            // Launch the application as soon as DOM is ready
-            function onDOMReady() {
-                setTimeout(function(){
-                    $.ui.launch();
-                },50);
-            }
-            $(onDOMReady);
-            
             // Enable cordova features when it activates
             var cordovaReady = false;
             function onCordovaReady() {
                 console.log('cordova ready');
                 navigator.splashscreen.hide();
+                $.ui.launch();
                 cordovaReady = true;
             }
             document.addEventListener("deviceready", onCordovaReady, false);
